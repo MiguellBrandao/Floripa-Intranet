@@ -42,8 +42,16 @@ employees
 | user_id | uuid | Conta associada |
 | name | varchar | Nome do funcionário |
 | phone | varchar | Telefone |
-| team_id | uuid | Equipa |
 | active | boolean | Se está ativo |
+| created_at | timestamp | Data de criação |
+```
+
+employee_teams
+```
+| Campo | Tipo | Descrição |
+|------|------|-----------|
+| employee_id | uuid | Funcionário |
+| team_id | uuid | Equipa |
 | created_at | timestamp | Data de criação |
 ```
 
@@ -95,8 +103,8 @@ tasks
 | date | date | Data |
 | start_time | time | Hora início prevista |
 | end_time | time | Hora fim prevista |
-| task_type | varchar | Tipo de trabalho |
-| notes | text | Notas |
+| task_type | enum | maintenance / pruning / cleaning / installation / inspection / emergency |
+| description | text | Descrição |
 | created_at | timestamp | Data criação |
 ```
 

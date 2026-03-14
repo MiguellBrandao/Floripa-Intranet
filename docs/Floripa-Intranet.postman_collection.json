@@ -1,0 +1,511 @@
+{
+  "info": {
+    "_postman_id": "4e32d733-d935-4a7d-85ee-407d4fcb78f4",
+    "name": "Floripa Intranet API",
+    "description": "Collection gerada a partir de docs/api-endpoints.md",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3001/api" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshTokenCookie", "value": "refresh_token=<paste_token_here>" },
+    { "key": "employeeId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "teamId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "teamId2", "value": "00000000-0000-0000-0000-000000000002" },
+    { "key": "gardenId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "taskId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "worklogId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "productId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "paymentId", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "quoteId", "value": "00000000-0000-0000-0000-000000000001" }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "POST /auth/login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"miguellbwork@gmail.com\",\n  \"password\": \"Nodeapp2107.\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login",
+            "description": "Expected 200: accessToken + user. Refresh token via HttpOnly cookie."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.accessToken) pm.collectionVariables.set('accessToken', json.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /auth/refresh",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Cookie", "value": "{{refreshTokenCookie}}" }],
+            "url": "{{baseUrl}}/auth/refresh",
+            "description": "Expected 200: new accessToken."
+          }
+        },
+        {
+          "name": "POST /auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Cookie", "value": "{{refreshTokenCookie}}" }],
+            "url": "{{baseUrl}}/auth/logout"
+          }
+        },
+        {
+          "name": "GET /auth/me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "GET /employees",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/employees"
+          }
+        },
+        {
+          "name": "POST /employees",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"new.employee@floripa.local\",\n  \"password\": \"Nodeapp2107.\",\n  \"role\": \"employee\",\n  \"name\": \"New Employee\",\n  \"phone\": \"912345678\",\n  \"team_ids\": [\"{{teamId}}\", \"{{teamId2}}\"],\n  \"active\": true\n}"
+            },
+            "url": "{{baseUrl}}/employees"
+          }
+        },
+        {
+          "name": "GET /employees/:id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/employees/{{employeeId}}"
+          }
+        },
+        {
+          "name": "PATCH /employees/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Employee\",\n  \"phone\": \"919999999\",\n  \"team_ids\": [\"{{teamId}}\"]\n}"
+            },
+            "url": "{{baseUrl}}/employees/{{employeeId}}"
+          }
+        },
+        {
+          "name": "DELETE /employees/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/employees/{{employeeId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "GET /teams",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "GET /teams/:id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/teams/{{teamId}}"
+          }
+        },
+        {
+          "name": "POST /teams",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Team A\"\n}" },
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "PATCH /teams/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Team A - Updated\"\n}" },
+            "url": "{{baseUrl}}/teams/{{teamId}}"
+          }
+        },
+        {
+          "name": "DELETE /teams/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/teams/{{teamId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gardens",
+      "item": [
+        {
+          "name": "GET /gardens",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/gardens"
+          }
+        },
+        {
+          "name": "POST /gardens",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Joao Silva\",\n  \"address\": \"Rua A, Porto\",\n  \"phone\": \"912345678\",\n  \"monthly_price\": 120,\n  \"maintenance_frequency\": \"weekly\",\n  \"start_date\": \"2026-03-01\",\n  \"billing_day\": 5,\n  \"status\": \"active\",\n  \"notes\": \"Cliente premium\"\n}"
+            },
+            "url": "{{baseUrl}}/gardens"
+          }
+        },
+        {
+          "name": "GET /gardens/:id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/gardens/{{gardenId}}"
+          }
+        },
+        {
+          "name": "PATCH /gardens/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"paused\",\n  \"notes\": \"Pausado por 1 mes\"\n}"
+            },
+            "url": "{{baseUrl}}/gardens/{{gardenId}}"
+          }
+        },
+        {
+          "name": "DELETE /gardens/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/gardens/{{gardenId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "GET /tasks",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "POST /tasks",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"garden_id\": \"{{gardenId}}\",\n  \"team_id\": \"{{teamId}}\",\n  \"date\": \"2026-03-14\",\n  \"start_time\": \"08:00:00\",\n  \"end_time\": \"11:00:00\",\n  \"task_type\": \"maintenance\",\n  \"notes\": \"Levar fertilizante\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "GET /tasks/:id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        },
+        {
+          "name": "PATCH /tasks/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"start_time\": \"09:00:00\",\n  \"notes\": \"Atraso por chuva\"\n}" },
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        },
+        {
+          "name": "DELETE /tasks/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Work Logs",
+      "item": [
+        {
+          "name": "POST /worklogs",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task_id\": \"{{taskId}}\",\n  \"employee_id\": \"{{employeeId}}\",\n  \"start_time\": \"2026-03-14T08:00:00.000Z\",\n  \"end_time\": \"2026-03-14T10:30:00.000Z\",\n  \"notes\": \"Concluido sem incidentes\"\n}"
+            },
+            "url": "{{baseUrl}}/worklogs"
+          }
+        },
+        {
+          "name": "GET /worklogs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/worklogs"
+          }
+        },
+        {
+          "name": "GET /worklogs/:id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/worklogs/{{worklogId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "GET /products",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/products"
+          }
+        },
+        {
+          "name": "POST /products",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fertilizante X\",\n  \"unit\": \"kg\",\n  \"stock_quantity\": 25\n}"
+            },
+            "url": "{{baseUrl}}/products"
+          }
+        },
+        {
+          "name": "PATCH /products/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"stock_quantity\": 18\n}" },
+            "url": "{{baseUrl}}/products/{{productId}}"
+          }
+        },
+        {
+          "name": "DELETE /products/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/products/{{productId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Usage",
+      "item": [
+        {
+          "name": "POST /product-usage",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{productId}}\",\n  \"garden_id\": \"{{gardenId}}\",\n  \"employee_id\": \"{{employeeId}}\",\n  \"quantity\": 2.5,\n  \"date\": \"2026-03-14\",\n  \"notes\": \"Aplicacao semanal\"\n}"
+            },
+            "url": "{{baseUrl}}/product-usage"
+          }
+        },
+        {
+          "name": "GET /product-usage",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/product-usage"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "GET /payments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/payments"
+          }
+        },
+        {
+          "name": "POST /payments",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"garden_id\": \"{{gardenId}}\",\n  \"month\": 3,\n  \"year\": 2026,\n  \"amount\": 120,\n  \"paid_at\": \"2026-03-10T12:00:00.000Z\",\n  \"notes\": \"Pago por transferencia\"\n}"
+            },
+            "url": "{{baseUrl}}/payments"
+          }
+        },
+        {
+          "name": "PATCH /payments/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 90,\n  \"notes\": \"Pagamento parcial\"\n}"
+            },
+            "url": "{{baseUrl}}/payments/{{paymentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quotes",
+      "item": [
+        {
+          "name": "GET /quotes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/quotes"
+          }
+        },
+        {
+          "name": "POST /quotes",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"client_name\": \"Maria Costa\",\n  \"address\": \"Rua B, Braga\",\n  \"description\": \"Manutencao mensal\",\n  \"price\": 180,\n  \"status\": \"draft\"\n}"
+            },
+            "url": "{{baseUrl}}/quotes"
+          }
+        },
+        {
+          "name": "PATCH /quotes/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"sent\"\n}" },
+            "url": "{{baseUrl}}/quotes/{{quoteId}}"
+          }
+        },
+        {
+          "name": "DELETE /quotes/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/quotes/{{quoteId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

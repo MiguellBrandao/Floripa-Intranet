@@ -18,11 +18,11 @@ garden-management/
 │  └─ api/           # NestJS backend
 │
 ├─ packages/
-│  ├─ database/      # Drizzle schema + database client
 │  └─ types/         # Shared TypeScript types
 ├─ turbo.json
 ├─ pnpm-workspace.yaml
 ├─ package.json
+├─ docker-compose.yml
 └─ README.md
 ```
 
@@ -76,6 +76,7 @@ apps/web
 ```
 apps/api/src
 
+db/
 auth/
 users/
 employees/
@@ -101,25 +102,27 @@ repository/
 
 ---
 
-# packages/database
+# apps/api/db (Drizzle ORM + Postgres)
 
-Contains the **Drizzle ORM setup**.
+Contains the **Drizzle ORM setup** inside the API.
 
 ```
-packages/database
+apps/api
 
-schema/
-  users.ts
-  employees.ts
-  teams.ts
-  gardens.ts
-  tasks.ts
-  products.ts
-  payments.ts
-  quotes.ts
-
-client.ts
 drizzle.config.ts
+drizzle/
+src/db/
+  schema.ts
+  client.ts
+  index.ts
+```
+
+# Docker Compose Startup Flow
+
+`docker-compose.yml` startup order:
+
+```
+workspace -> postgres -> migration -> (api + web)
 ```
 
 ---

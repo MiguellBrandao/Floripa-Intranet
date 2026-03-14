@@ -1,0 +1,18 @@
+import { Transform } from 'class-transformer';
+import { IsIn, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { PRODUCT_UNITS, type ProductUnit } from '../products.constants';
+
+export class CreateProductDto {
+  @IsString()
+  name!: string;
+
+  @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim().toLowerCase() : value))
+  @IsIn(PRODUCT_UNITS)
+  unit!: ProductUnit;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  stock_quantity?: number;
+}

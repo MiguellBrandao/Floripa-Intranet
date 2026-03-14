@@ -25,7 +25,8 @@ State Management:
 
 Authentication:
 
-- JWT stored in cookies
+- Access token (JWT) in payload/header
+- Refresh token in HttpOnly cookie
 
 ---
 
@@ -47,6 +48,7 @@ Architecture:
 Authentication:
 
 - JWT
+- Passport.js strategies/guards
 - Role-based access
 
 ---
@@ -60,6 +62,7 @@ Database:
 ORM:
 
 - Drizzle ORM
+- Location: `apps/api/src/db` + `apps/api/drizzle.config.ts`
 
 Benefits:
 
@@ -78,6 +81,11 @@ Package Manager:
 Monorepo:
 
 - Turborepo
+
+Containers (local dev):
+
+- Docker Compose
+- Services: workspace, postgres, migration, api, web
 
 Linting:
 

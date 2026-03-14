@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1773411105087,
+      "tag": "0000_glossy_gateway",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773418900000,
+      "tag": "0001_employee_teams",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773420500000,
+      "tag": "0002_tasks_enum_description",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1773423000000,
+      "tag": "0003_work_logs_team_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1773426000000,
+      "tag": "0004_products_unit_enum",
+      "breakpoints": true
+    }
+  ]
+}
