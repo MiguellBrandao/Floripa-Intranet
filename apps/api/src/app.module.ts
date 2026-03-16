@@ -10,6 +10,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { ProductUsageModule } from './product-usage/product-usage.module';
 import { ProductsModule } from './products/products.module';
 import { QuotesModule } from './quotes/quotes.module';
+import { ReportsModule } from './reports/reports.module';
 import { StockRulesModule } from './stock-rules/stock-rules.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TeamsModule } from './teams/teams.module';
@@ -31,6 +32,7 @@ import { WorkLogsModule } from './worklogs/worklogs.module';
     StockRulesModule,
     ProductUsageModule,
     QuotesModule,
+    ReportsModule,
     TasksModule,
     TeamsModule,
     WorkLogsModule,

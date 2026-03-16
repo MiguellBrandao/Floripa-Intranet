@@ -42,6 +42,7 @@ Irrivio is a monorepo for a garden-services intranet with a NestJS API and a Nex
 - `product-usage`: stock consumption tied to gardens and company memberships.
 - `payments`: client payments, admin only.
 - `quotes`: company-scoped quotes linked to gardens, with services arrays and validity date, admin only.
+- `reports`: admin-only stored PDF reports with period metadata, summary metrics, and base64 file content.
 
 ## Request rules
 

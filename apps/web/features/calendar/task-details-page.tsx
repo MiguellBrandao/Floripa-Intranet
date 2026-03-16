@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import {
   ArrowLeftIcon,
   CheckmarkCircle02Icon,
+  MapPinpoint02Icon,
   PackageAddIcon,
   PencilEdit02Icon,
   SearchIcon,
@@ -315,11 +316,41 @@ export function TaskDetailsPage({ taskId }: TaskDetailsPageProps) {
       ),
     [gardensQuery.data]
   )
+  const taskGarden = useMemo(
+    () => (gardensQuery.data ?? []).find((garden) => garden.id === task?.garden_id) ?? null,
+    [gardensQuery.data, task?.garden_id]
+  )
   const teamNameById = useMemo(
     () => Object.fromEntries((teamsQuery.data ?? []).map((team) => [team.id, team.name])),
     [teamsQuery.data]
   )
   const isFutureTask = task?.date ? task.date > new Date().toISOString().slice(0, 10) : false
+
+  function handleOpenLocation() {
+    const address = taskGarden?.address?.trim()
+
+    if (!address) {
+      toast.error("Este jardim nao tem morada configurada.")
+      return
+    }
+
+    const encodedAddress = encodeURIComponent(address)
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`
+    const mobileLocationUrl = `geo:0,0?q=${encodedAddress}`
+    const mobileNavigator = navigator as Navigator & {
+      userAgentData?: { mobile?: boolean }
+    }
+    const isMobile =
+      mobileNavigator.userAgentData?.mobile === true ||
+      /android|iphone|ipad|ipod|windows phone|mobile/i.test(navigator.userAgent)
+
+    if (isMobile) {
+      window.location.href = mobileLocationUrl
+      return
+    }
+
+    window.open(googleMapsUrl, "_blank", "noopener,noreferrer")
+  }
 
   if (!accessToken) {
     return (
@@ -387,6 +418,18 @@ export function TaskDetailsPage({ taskId }: TaskDetailsPageProps) {
               </Link>
             </Button>
             <div className="flex items-center justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="shrink-0"
+                onClick={handleOpenLocation}
+                disabled={!taskGarden?.address?.trim()}
+              >
+                <HugeiconsIcon icon={MapPinpoint02Icon} strokeWidth={2} />
+                <span className="hidden sm:inline">Abrir localizacao</span>
+                <span className="sm:hidden">Localizacao</span>
+              </Button>
               <Button
                 type="button"
                 variant={latestWorkLog ? "default" : "outline"}

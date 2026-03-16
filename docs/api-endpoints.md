@@ -15,7 +15,7 @@ Notes:
 
 ## Company-scoped rules
 
-For all business modules (`company-memberships`, `teams`, `gardens`, `tasks`, `worklogs`, `products`, `stock-rules`, `product-usage`, `payments`, `quotes`):
+For all business modules (`company-memberships`, `teams`, `gardens`, `tasks`, `worklogs`, `products`, `stock-rules`, `product-usage`, `expenses`, `payments`, `quotes`, `reports`):
 
 - `GET` list endpoints accept `company_id` in the query string.
 - `GET` detail endpoints accept `company_id` in the query string.
@@ -702,5 +702,110 @@ Response item example:
 ```
 
 ### `DELETE /quotes/:id`
+
+Response `204`
+
+## Reports
+
+Access rules:
+
+- `admin` only.
+- The admin must still be an active company member of the target company.
+- `GET /reports` returns metadata and `summary`.
+- `GET /reports/:id` also returns `file_base64`.
+
+### `GET /reports?company_id=<uuid>&search=<term>&period_type=<this_month|last_month|last_year|all_time|custom>`
+
+Response item example:
+
+```json
+{
+  "id": "uuid",
+  "company_id": "uuid",
+  "generated_by_company_membership_id": "uuid",
+  "generated_by_name": "Miguel Work",
+  "report_type": "general",
+  "period_type": "this_month",
+  "period_start": "2026-03-01",
+  "period_end": "2026-03-16",
+  "title": "Relatorio geral - Este mes",
+  "file_name": "relatorio-geral-este-mes-20260316-1700.pdf",
+  "mime_type": "application/pdf",
+  "summary": {
+    "revenue": 950,
+    "expected_revenue": 1200,
+    "open_amount": 250,
+    "direct_expenses": 140,
+    "product_usage_expenses": 75,
+    "total_expenses": 215,
+    "gross": 735,
+    "gardens_active": 8,
+    "tasks_total": 23,
+    "tasks_completed": 17,
+    "tasks_pending": 6,
+    "teams_with_activity": 3,
+    "members_with_activity": 5,
+    "stock_alerts": 2,
+    "quotes_created": 4,
+    "quotes_value": 890
+  },
+  "created_at": "2026-03-16T17:00:00.000Z"
+}
+```
+
+### `GET /reports/:id?company_id=<uuid>`
+
+Response includes all metadata above plus:
+
+```json
+{
+  "file_base64": "<base64_pdf>"
+}
+```
+
+### `POST /reports`
+
+```json
+{
+  "company_id": "uuid",
+  "title": "Relatorio geral - Este mes",
+  "report_type": "general",
+  "period_type": "this_month",
+  "period_start": "2026-03-01",
+  "period_end": "2026-03-16",
+  "file_name": "relatorio-geral-este-mes-20260316-1700.pdf",
+  "mime_type": "application/pdf",
+  "file_base64": "<base64_pdf>",
+  "summary": {
+    "revenue": 950,
+    "expected_revenue": 1200,
+    "open_amount": 250,
+    "direct_expenses": 140,
+    "product_usage_expenses": 75,
+    "total_expenses": 215,
+    "gross": 735,
+    "gardens_active": 8,
+    "tasks_total": 23,
+    "tasks_completed": 17,
+    "tasks_pending": 6,
+    "teams_with_activity": 3,
+    "members_with_activity": 5,
+    "stock_alerts": 2,
+    "quotes_created": 4,
+    "quotes_value": 890
+  }
+}
+```
+
+### `PATCH /reports/:id`
+
+```json
+{
+  "company_id": "uuid",
+  "title": "Relatorio geral - Marco 2026"
+}
+```
+
+### `DELETE /reports/:id`
 
 Response `204`

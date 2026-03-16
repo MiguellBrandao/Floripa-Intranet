@@ -410,10 +410,10 @@ function AdminDashboard({
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-1">
             <h2 className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
-              Resumo financeiro
+              Visao geral
             </h2>
             <p className="text-sm text-muted-foreground">
-              Pagamentos recebidos, despesas registadas e margem do periodo selecionado.
+              Indicadores financeiros e operacionais com base no periodo selecionado.
             </p>
           </div>
 

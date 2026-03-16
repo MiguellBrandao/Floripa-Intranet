@@ -20,6 +20,14 @@ type ListTasksFilters = {
   date_to?: string
 }
 
+type ListWorkLogsFilters = {
+  task_id?: string
+  team_id?: string
+  garden_id?: string
+  start_from?: string
+  start_to?: string
+}
+
 export function listTasks(authToken: string, filters?: ListTasksFilters) {
   const companyId = requireActiveCompanyId()
   const params = new URLSearchParams()
@@ -149,6 +157,32 @@ export function listTaskWorkLogs(authToken: string, taskId: string) {
     company_id: companyId,
     task_id: taskId,
   })
+
+  return apiFetch<TaskWorkLog[]>(`/worklogs?${params.toString()}`, {
+    authToken,
+    requireAuth: true,
+  })
+}
+
+export function listWorkLogs(authToken: string, filters?: ListWorkLogsFilters) {
+  const companyId = requireActiveCompanyId()
+  const params = new URLSearchParams({ company_id: companyId })
+
+  if (filters?.task_id) {
+    params.set("task_id", filters.task_id)
+  }
+  if (filters?.team_id) {
+    params.set("team_id", filters.team_id)
+  }
+  if (filters?.garden_id) {
+    params.set("garden_id", filters.garden_id)
+  }
+  if (filters?.start_from) {
+    params.set("start_from", filters.start_from)
+  }
+  if (filters?.start_to) {
+    params.set("start_to", filters.start_to)
+  }
 
   return apiFetch<TaskWorkLog[]>(`/worklogs?${params.toString()}`, {
     authToken,

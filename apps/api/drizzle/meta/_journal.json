@@ -120,6 +120,13 @@
       "when": 1773688200000,
       "tag": "0016_expenses_amount",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1773693600000,
+      "tag": "0017_reports",
+      "breakpoints": true
     }
   ]
 }

@@ -188,6 +188,16 @@ export const irrigationFrequencyEnum = pgEnum('irrigation_frequency_enum', [
   'weekly',
 ]);
 
+export const reportTypeEnum = pgEnum('report_type_enum', ['general']);
+
+export const reportPeriodTypeEnum = pgEnum('report_period_type_enum', [
+  'this_month',
+  'last_month',
+  'last_year',
+  'all_time',
+  'custom',
+]);
+
 export const products = pgTable('products', {
   id: uuid('id').defaultRandom().primaryKey(),
   companyId: uuid('company_id')
@@ -318,5 +328,29 @@ export const quotes = pgTable('quotes', {
   validUntil: date('valid_until')
     .notNull()
     .default(sql`(now() + interval '1 month')::date`),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const reports = pgTable('reports', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  companyId: uuid('company_id')
+    .notNull()
+    .references(() => companies.id, { onDelete: 'cascade' }),
+  generatedByCompanyMembershipId: uuid('generated_by_company_membership_id').references(
+    () => companyMemberships.id,
+    {
+      onDelete: 'set null',
+    },
+  ),
+  generatedByName: varchar('generated_by_name', { length: 255 }).notNull(),
+  reportType: reportTypeEnum('report_type').notNull().default('general'),
+  periodType: reportPeriodTypeEnum('period_type').notNull(),
+  periodStart: date('period_start'),
+  periodEnd: date('period_end'),
+  title: varchar('title', { length: 255 }).notNull(),
+  fileName: varchar('file_name', { length: 255 }).notNull(),
+  mimeType: varchar('mime_type', { length: 100 }).notNull(),
+  fileBase64: text('file_base64').notNull(),
+  summaryJson: text('summary_json').notNull().default('{}'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });

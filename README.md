@@ -22,6 +22,7 @@ The current implementation already covers the main operational areas of the prod
 - Irrigation zones and schedules per garden
 - Payments
 - Quotes linked to gardens, with PDF and PNG export
+- Stored PDF reports with period-based financial and operational summaries
 
 ## Architecture
 
@@ -67,6 +68,7 @@ Main modules currently in production code:
 - `irrigation-zones`
 - `payments`
 - `quotes`
+- `reports`
 - `users`
 
 ### `apps/web`
@@ -89,6 +91,7 @@ Main areas currently implemented in the UI:
 - Stock and stock rules
 - Payments
 - Quotes
+- Reports
 
 ## Company model
 

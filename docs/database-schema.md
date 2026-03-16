@@ -198,3 +198,22 @@ The work log is tied to a task and a team. It does not store `company_membership
 | `price` | `numeric(10,2)` | Proposed price |
 | `valid_until` | `date` | Default is one month after creation |
 | `created_at` | `timestamp` | Creation date |
+
+## reports
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | `uuid` | Primary key |
+| `company_id` | `uuid` | FK -> `companies.id` |
+| `generated_by_company_membership_id` | `uuid` | FK -> `company_memberships.id`, nullable |
+| `generated_by_name` | `varchar(255)` | Snapshot of the user name at generation time |
+| `report_type` | `enum` | Currently `general` |
+| `period_type` | `enum` | `this_month`, `last_month`, `last_year`, `all_time`, `custom` |
+| `period_start` | `date` | Nullable for `all_time` |
+| `period_end` | `date` | Nullable for `all_time` |
+| `title` | `varchar(255)` | Report title |
+| `file_name` | `varchar(255)` | Stored file name |
+| `mime_type` | `varchar(100)` | File MIME type |
+| `file_base64` | `text` | Stored PDF as base64 |
+| `summary_json` | `text` | Serialized summary values used in the history UI |
+| `created_at` | `timestamp` | Creation date |

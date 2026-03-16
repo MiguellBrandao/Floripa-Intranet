@@ -17,6 +17,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Calendar03Icon,
   ChartRingIcon,
+  FileDownloadIcon,
   Invoice03Icon,
   Leaf02Icon,
   PackageIcon,
@@ -79,6 +80,11 @@ const adminFinanceItems = [
     title: "Orcamentos",
     url: "/quotes",
     icon: <HugeiconsIcon icon={SentIcon} strokeWidth={2} />,
+  },
+  {
+    title: "Relatorios",
+    url: "/reports",
+    icon: <HugeiconsIcon icon={FileDownloadIcon} strokeWidth={2} />,
   },
 ]
 
