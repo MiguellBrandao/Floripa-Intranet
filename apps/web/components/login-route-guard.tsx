@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import { SessionLoadingScreen } from "@/components/session-loading-screen"
+import { getAuthenticatedHomePath } from "@/lib/auth/routes"
 import { ensureSession } from "@/lib/auth/session"
 import { useAuthStore } from "@/lib/auth/store"
 
@@ -22,7 +23,7 @@ export function LoginRouteGuard({
 
     async function validate() {
       if (accessToken && user) {
-        router.replace("/dashboard")
+        router.replace(getAuthenticatedHomePath(user))
         return
       }
 
@@ -33,7 +34,7 @@ export function LoginRouteGuard({
       }
 
       if (token && useAuthStore.getState().user) {
-        router.replace("/dashboard")
+        router.replace(getAuthenticatedHomePath(useAuthStore.getState().user))
         return
       }
 

@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { loginFormSchema, type LoginFormValues } from "@/features/auth/login-form-schema"
 import { login } from "@/lib/auth/api"
+import { getAuthenticatedHomePath } from "@/lib/auth/routes"
 import { useAuthStore } from "@/lib/auth/store"
 import { cn } from "@/lib/utils"
 
@@ -45,7 +46,7 @@ export function LoginForm({
     onSuccess: (session) => {
       setSession(session)
       form.reset({ email: session.user.email, password: "" })
-      router.push("/dashboard")
+      router.push(getAuthenticatedHomePath(session.user))
     },
   })
 

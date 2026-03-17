@@ -243,30 +243,10 @@ pnpm install
 pnpm --filter api db:migrate
 ```
 
-4. Optional: seed local users and default company:
-
-```bash
-pnpm --filter api db:seed:users
-```
-
-5. Start the monorepo:
+4. Start the monorepo:
 
 ```bash
 pnpm dev
-```
-
-## Local seed users
-
-The current seed script creates or refreshes the default `Floripa Jardins` company and these local users:
-
-- Admin: `miguellbdefault@gmail.com`
-- Employee: `miguellbwork@gmail.com`
-- Password: `Nodeapp2107.`
-
-Seed command:
-
-```bash
-pnpm --filter api db:seed:users
 ```
 
 ## Useful commands
@@ -290,7 +270,6 @@ pnpm --filter api db:generate
 pnpm --filter api db:migrate
 pnpm --filter api db:push
 pnpm --filter api db:studio
-pnpm --filter api db:seed:users
 ```
 
 ### Web

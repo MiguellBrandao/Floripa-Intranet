@@ -17,6 +17,7 @@ export class UsersService {
       .select({
         id: users.id,
         email: users.email,
+        isSuperAdmin: users.isSuperAdmin,
       })
       .from(users)
       .where(eq(users.id, id))
@@ -38,6 +39,7 @@ export class UsersService {
         id: users.id,
         email: users.email,
         passwordHash: users.passwordHash,
+        isSuperAdmin: users.isSuperAdmin,
       })
       .from(users)
       .where(eq(users.email, normalizedEmail))
@@ -132,6 +134,7 @@ export class UsersService {
     row: {
       id: string;
       email: string;
+      isSuperAdmin: boolean;
     },
     employeeProfiles: Array<{
       name: string;
@@ -142,7 +145,7 @@ export class UsersService {
     const activeProfile = employeeProfiles.find((profile) => profile.active);
     const fallbackProfile = employeeProfiles[0];
 
-    if (!activeProfile) {
+    if (!activeProfile && !row.isSuperAdmin) {
       throw new UnauthorizedException('User has no active company memberships');
     }
 
@@ -153,6 +156,7 @@ export class UsersService {
         activeProfile?.name ??
         fallbackProfile?.name ??
         this.fallbackNameFromEmail(row.email),
+      is_super_admin: row.isSuperAdmin,
     };
   }
 

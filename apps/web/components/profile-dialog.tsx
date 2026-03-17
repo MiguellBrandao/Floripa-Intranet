@@ -59,6 +59,7 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
   const accessToken = useAuthStore((state) => state.accessToken)
   const user = useAuthStore((state) => state.user)
   const setUser = useAuthStore((state) => state.setUser)
+  const canEditName = Boolean(user && !user.is_super_admin)
 
   const nameForm = useForm<ProfileNameValues>({
     resolver: zodResolver(profileNameSchema),
@@ -162,38 +163,44 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
         </DialogHeader>
 
         <div className="space-y-6">
-          <form className="space-y-4" onSubmit={nameForm.handleSubmit(onSubmitName)}>
-            <FieldGroup className="gap-4">
-              <Controller
-                control={nameForm.control}
-                name="name"
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="profile-name">Nome</FieldLabel>
-                    <Input {...field} id="profile-name" aria-invalid={fieldState.invalid} />
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                )}
-              />
+          {canEditName ? (
+            <form className="space-y-4" onSubmit={nameForm.handleSubmit(onSubmitName)}>
+              <FieldGroup className="gap-4">
+                <Controller
+                  control={nameForm.control}
+                  name="name"
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="profile-name">Nome</FieldLabel>
+                      <Input {...field} id="profile-name" aria-invalid={fieldState.invalid} />
+                      <FieldError errors={[fieldState.error]} />
+                    </Field>
+                  )}
+                />
 
-              {saveNameMutation.isError ? (
-                <FieldError>{saveNameMutation.error.message}</FieldError>
-              ) : null}
+                {saveNameMutation.isError ? (
+                  <FieldError>{saveNameMutation.error.message}</FieldError>
+                ) : null}
 
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Button
-                  type="submit"
-                  className="bg-[#215442] text-white hover:bg-[#183b2f]"
-                  disabled={saveNameMutation.isPending || isNameUnchanged}
-                >
-                  {saveNameMutation.isPending ? "A guardar..." : "Guardar nome"}
-                </Button>
-              </div>
-            </FieldGroup>
-          </form>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    type="submit"
+                    className="bg-[#215442] text-white hover:bg-[#183b2f]"
+                    disabled={saveNameMutation.isPending || isNameUnchanged}
+                  >
+                    {saveNameMutation.isPending ? "A guardar..." : "Guardar nome"}
+                  </Button>
+                </div>
+              </FieldGroup>
+            </form>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-[#dfd7c0] bg-[#fbf8ef] p-4 text-sm text-muted-foreground">
+              O nome do super admin nao e editado nesta area. Aqui so podes atualizar a password.
+            </div>
+          )}
 
           <form
-            className="space-y-4 border-t border-[#dfd7c0] pt-6"
+            className={`space-y-4 ${canEditName ? "border-t border-[#dfd7c0] pt-6" : ""}`}
             onSubmit={passwordForm.handleSubmit(onSubmitPassword)}
           >
             <FieldGroup className="gap-4">

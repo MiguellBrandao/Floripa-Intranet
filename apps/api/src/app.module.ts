@@ -7,6 +7,7 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { GardensModule } from './gardens/gardens.module';
 import { IrrigationZonesModule } from './irrigation-zones/irrigation-zones.module';
 import { PaymentsModule } from './payments/payments.module';
+import { PlatformModule } from './platform/platform.module';
 import { ProductUsageModule } from './product-usage/product-usage.module';
 import { ProductsModule } from './products/products.module';
 import { QuotesModule } from './quotes/quotes.module';
@@ -28,6 +29,7 @@ import { WorkLogsModule } from './worklogs/worklogs.module';
     GardensModule,
     IrrigationZonesModule,
     PaymentsModule,
+    PlatformModule,
     ProductsModule,
     StockRulesModule,
     ProductUsageModule,

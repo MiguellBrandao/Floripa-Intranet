@@ -18,6 +18,7 @@ export type AuthUser = {
   id: string
   name: string
   email: string
+  is_super_admin: boolean
 }
 
 export type LoginPayload = {

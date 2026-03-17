@@ -7,7 +7,7 @@ import { SessionLoadingScreen } from "@/components/session-loading-screen"
 import { ensureSession } from "@/lib/auth/session"
 import { useAuthStore } from "@/lib/auth/store"
 
-export function AuthSessionGuard({
+export function SuperAdminSessionGuard({
   children,
 }: {
   children: React.ReactNode
@@ -22,8 +22,8 @@ export function AuthSessionGuard({
 
     async function validate() {
       if (accessToken && user) {
-        if (user.is_super_admin) {
-          router.replace("/platform")
+        if (!user.is_super_admin) {
+          router.replace("/dashboard")
           return
         }
 
@@ -39,13 +39,15 @@ export function AuthSessionGuard({
         return
       }
 
-      if (token && useAuthStore.getState().user) {
-        if (useAuthStore.getState().user?.is_super_admin) {
-          router.replace("/platform")
-          return
-        }
+      const currentUser = useAuthStore.getState().user
 
+      if (token && currentUser?.is_super_admin) {
         setChecked(true)
+        return
+      }
+
+      if (token && currentUser && !currentUser.is_super_admin) {
+        router.replace("/dashboard")
         return
       }
 
@@ -59,7 +61,7 @@ export function AuthSessionGuard({
     }
   }, [accessToken, router, user])
 
-  if (!checked && !(accessToken && user && !user.is_super_admin)) {
+  if (!checked && !(accessToken && user?.is_super_admin)) {
     return <SessionLoadingScreen />
   }
 

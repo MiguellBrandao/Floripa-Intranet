@@ -25,7 +25,6 @@ Direct local base URL is `http://localhost:3001`.
 ```txt
 apps/api/
 |- drizzle/
-|- scripts/
 `- src/
    |- app.module.ts
    |- main.ts

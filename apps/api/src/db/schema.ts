@@ -15,12 +15,19 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
-export const users = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  email: varchar('email', { length: 255 }).notNull(),
-  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+export const users = pgTable(
+  'users',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    email: varchar('email', { length: 255 }).notNull(),
+    passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+    isSuperAdmin: boolean('is_super_admin').default(false).notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    emailUnique: uniqueIndex('users_email_unique').on(table.email),
+  }),
+);
 
 export const companies = pgTable(
   'companies',

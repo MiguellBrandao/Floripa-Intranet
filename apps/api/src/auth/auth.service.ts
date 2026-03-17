@@ -93,6 +93,7 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
+      is_super_admin: user.is_super_admin,
     };
 
     const accessExpiresInSeconds = Math.floor(
@@ -132,6 +133,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
+        is_super_admin: user.is_super_admin,
       },
       companies,
     };
