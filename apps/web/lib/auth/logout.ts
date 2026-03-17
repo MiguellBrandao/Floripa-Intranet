@@ -23,3 +23,11 @@ export function consumeLogoutRedirect() {
 
   return hasMarker
 }
+
+export function hasLogoutRedirect() {
+  if (typeof window === "undefined") {
+    return false
+  }
+
+  return window.sessionStorage.getItem(LOGOUT_REDIRECT_MARKER) === "1"
+}

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 
 import {
   Avatar,
@@ -43,7 +42,6 @@ export function NavUser({
     avatar: string
   }
 }) {
-  const router = useRouter()
   const { isMobile } = useSidebar()
   const accessToken = useAuthStore((state) => state.accessToken)
   const clearSession = useAuthStore((state) => state.clearSession)
@@ -66,7 +64,7 @@ export function NavUser({
       // Always clear local session even if the logout request fails.
     } finally {
       clearSession()
-      router.replace("/auth/login")
+      window.location.replace("/auth/login")
     }
   }
 

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import { SessionLoadingScreen } from "@/components/session-loading-screen"
+import { hasLogoutRedirect } from "@/lib/auth/logout"
 import { ensureSession } from "@/lib/auth/session"
 import { useAuthStore } from "@/lib/auth/store"
 
@@ -22,6 +23,11 @@ export function AuthSessionGuard({
     let active = true
 
     async function validate() {
+      if (hasLogoutRedirect()) {
+        router.replace("/auth/login")
+        return
+      }
+
       if (accessToken && user) {
         if (user.is_super_admin) {
           router.replace("/platform")

@@ -31,6 +31,7 @@ export function logout(accessToken: string | null) {
   return apiFetch<{ success: true }>("/auth/logout", {
     method: "POST",
     authToken: accessToken,
+    keepalive: true,
   })
 }
 

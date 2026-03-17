@@ -1,9 +1,14 @@
 import { getCurrentUser, refreshSession } from "@/lib/auth/api"
+import { hasLogoutRedirect } from "@/lib/auth/logout"
 import { useAuthStore } from "@/lib/auth/store"
 
 let refreshPromise: Promise<string | null> | null = null
 
 export async function ensureSession(options?: { force?: boolean }) {
+  if (hasLogoutRedirect()) {
+    return null
+  }
+
   const { accessToken, user } = useAuthStore.getState()
 
   if (!options?.force && accessToken && user) {
