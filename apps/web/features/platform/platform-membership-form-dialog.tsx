@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { Controller, useForm, useWatch } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -120,10 +120,22 @@ export function PlatformMembershipFormDialog({
     control: form.control,
     name: "user_mode",
   })
+  const role = useWatch({
+    control: form.control,
+    name: "role",
+  })
+  const existingUserId = useWatch({
+    control: form.control,
+    name: "existing_user_id",
+  })
   const selectedTeamIds = useWatch({
     control: form.control,
     name: "team_ids",
   })
+  const selectableUsers = useMemo(
+    () => users.filter((user) => !user.is_super_admin),
+    [users]
+  )
 
   useEffect(() => {
     if (!open) {
@@ -138,6 +150,37 @@ export function PlatformMembershipFormDialog({
 
     form.reset(platformMembershipFormDefaults)
   }, [form, membership, mode, open])
+
+  useEffect(() => {
+    if (role !== "admin") {
+      return
+    }
+
+    if (form.getValues("team_ids").length === 0) {
+      return
+    }
+
+    form.setValue("team_ids", [], {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+  }, [form, role])
+
+  useEffect(() => {
+    if (userMode !== "existing" || !existingUserId) {
+      return
+    }
+
+    const userStillAvailable = selectableUsers.some((user) => user.id === existingUserId)
+    if (userStillAvailable) {
+      return
+    }
+
+    form.setValue("existing_user_id", "", {
+      shouldDirty: true,
+      shouldValidate: true,
+    })
+  }, [existingUserId, form, selectableUsers, userMode])
 
   const saveMutation = useMutation({
     mutationFn: async (values: PlatformMembershipFormValues) => {
@@ -235,12 +278,12 @@ export function PlatformMembershipFormDialog({
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel>Utilizador</FieldLabel>
                         <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger aria-invalid={fieldState.invalid}>
-                            <SelectValue placeholder="Seleciona um utilizador" />
-                          </SelectTrigger>
+                            <SelectTrigger aria-invalid={fieldState.invalid}>
+                              <SelectValue placeholder="Seleciona um utilizador" />
+                            </SelectTrigger>
                           <SelectContent>
-                            {users.length ? (
-                              users.map((user) => (
+                            {selectableUsers.length ? (
+                              selectableUsers.map((user) => (
                                 <SelectItem key={user.id} value={user.id}>
                                   {user.email}
                                 </SelectItem>
@@ -303,24 +346,19 @@ export function PlatformMembershipFormDialog({
             <div className="grid gap-5 md:grid-cols-2">
               <Controller
                 control={form.control}
-                name="role"
+                name="phone"
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Role</FieldLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger aria-invalid={fieldState.invalid}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="employee">Employee</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FieldLabel htmlFor="membership-phone">Telemovel</FieldLabel>
+                    <Input
+                      {...field}
+                      id="membership-phone"
+                      aria-invalid={fieldState.invalid}
+                    />
                     <FieldError errors={[fieldState.error]} />
                   </Field>
                 )}
               />
-
               <Controller
                 control={form.control}
                 name="name"
@@ -336,23 +374,62 @@ export function PlatformMembershipFormDialog({
                   </Field>
                 )}
               />
+            </div>
 
+            <Controller
+              control={form.control}
+              name="role"
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Role</FieldLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger aria-invalid={fieldState.invalid}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="employee">Employee</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FieldError errors={[fieldState.error]} />
+                </Field>
+              )}
+            />
+
+            {role !== "admin" ? (
               <Controller
                 control={form.control}
-                name="phone"
-                render={({ field, fieldState }) => (
+                name="team_ids"
+                render={({ fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="membership-phone">Telefone</FieldLabel>
-                    <Input
-                      {...field}
-                      id="membership-phone"
-                      aria-invalid={fieldState.invalid}
-                    />
+                    <FieldLabel>Equipas</FieldLabel>
+                    {teams.length ? (
+                      <div className="flex flex-wrap gap-2">
+                        {teams.map((team) => {
+                          const selected = selectedTeamIds.includes(team.id)
+                          return (
+                            <Button
+                              key={team.id}
+                              type="button"
+                              variant={selected ? "default" : "outline"}
+                              className={selected ? "bg-[#215442] text-white hover:bg-[#183b2f]" : ""}
+                              onClick={() => toggleTeamSelection(team.id)}
+                            >
+                              {team.name}
+                            </Button>
+                          )
+                        })}
+                      </div>
+                    ) : (
+                      <div className="rounded-xl border border-dashed border-[#dfd7c0] px-4 py-3 text-sm text-muted-foreground">
+                        Ainda nao existem equipas nesta empresa.
+                      </div>
+                    )}
                     <FieldError errors={[fieldState.error]} />
                   </Field>
                 )}
               />
-            </div>
+            ) : null}
 
             <Controller
               control={form.control}
@@ -378,39 +455,6 @@ export function PlatformMembershipFormDialog({
                       Inativo
                     </Button>
                   </div>
-                </Field>
-              )}
-            />
-
-            <Controller
-              control={form.control}
-              name="team_ids"
-              render={({ fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Equipas</FieldLabel>
-                  {teams.length ? (
-                    <div className="flex flex-wrap gap-2">
-                      {teams.map((team) => {
-                        const selected = selectedTeamIds.includes(team.id)
-                        return (
-                          <Button
-                            key={team.id}
-                            type="button"
-                            variant={selected ? "default" : "outline"}
-                            className={selected ? "bg-[#215442] text-white hover:bg-[#183b2f]" : ""}
-                            onClick={() => toggleTeamSelection(team.id)}
-                          >
-                            {team.name}
-                          </Button>
-                        )
-                      })}
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-dashed border-[#dfd7c0] px-4 py-3 text-sm text-muted-foreground">
-                      Ainda nao existem equipas nesta empresa.
-                    </div>
-                  )}
-                  <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
             />

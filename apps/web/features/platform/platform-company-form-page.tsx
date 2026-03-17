@@ -320,84 +320,97 @@ export function PlatformCompanyFormPage({
                     </p>
                   </div>
 
-                  <div className="grid gap-5 md:grid-cols-2">
-                    <Controller
-                      control={form.control}
-                      name="initial_admin_mode"
-                      render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel>Origem</FieldLabel>
-                          <Select value={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger aria-invalid={fieldState.invalid}>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="existing">Utilizador existente</SelectItem>
-                              <SelectItem value="new">Criar novo utilizador</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FieldError errors={[fieldState.error]} />
-                        </Field>
-                      )}
-                    />
-                    <CompanyField
-                      control={form.control}
-                      name="initial_admin_name"
-                      label="Nome na empresa"
-                    />
-                  </div>
+                  <Controller
+                    control={form.control}
+                    name="initial_admin_mode"
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel>Origem</FieldLabel>
+                        <Select value={field.value} onValueChange={field.onChange}>
+                          <SelectTrigger aria-invalid={fieldState.invalid}>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="existing">Utilizador existente</SelectItem>
+                            <SelectItem value="new">Criar novo utilizador</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FieldError errors={[fieldState.error]} />
+                      </Field>
+                    )}
+                  />
 
                   {initialAdminMode === "existing" ? (
-                    <Controller
-                      control={form.control}
-                      name="initial_admin_user_id"
-                      render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                          <FieldLabel>Utilizador existente</FieldLabel>
-                          <Select value={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger aria-invalid={fieldState.invalid}>
-                              <SelectValue placeholder="Seleciona um utilizador" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {existingAdminUsers.length ? (
-                                existingAdminUsers.map((user) => (
-                                  <SelectItem key={user.id} value={user.id}>
-                                    {user.email}
-                                  </SelectItem>
-                                ))
-                              ) : (
-                                <SelectItem value="__empty" disabled>
-                                  Sem utilizadores disponiveis
-                                </SelectItem>
-                              )}
-                            </SelectContent>
-                          </Select>
-                          <FieldError errors={[fieldState.error]} />
-                        </Field>
-                      )}
-                    />
+                    <>
+                      <div className="grid gap-5 md:grid-cols-2">
+                        <CompanyField
+                          control={form.control}
+                          name="initial_admin_name"
+                          label="Nome na empresa"
+                        />
+                        <Controller
+                          control={form.control}
+                          name="initial_admin_user_id"
+                          render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                              <FieldLabel>Utilizador</FieldLabel>
+                              <Select value={field.value} onValueChange={field.onChange}>
+                                <SelectTrigger aria-invalid={fieldState.invalid}>
+                                  <SelectValue placeholder="Seleciona um utilizador" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {existingAdminUsers.length ? (
+                                    existingAdminUsers.map((user) => (
+                                      <SelectItem key={user.id} value={user.id}>
+                                        {user.email}
+                                      </SelectItem>
+                                    ))
+                                  ) : (
+                                    <SelectItem value="__empty" disabled>
+                                      Sem utilizadores disponiveis
+                                    </SelectItem>
+                                  )}
+                                </SelectContent>
+                              </Select>
+                              <FieldError errors={[fieldState.error]} />
+                            </Field>
+                          )}
+                        />
+                      </div>
+                      <CompanyField
+                        control={form.control}
+                        name="initial_admin_phone"
+                        label="Telemovel"
+                      />
+                    </>
                   ) : (
-                    <div className="grid gap-5 md:grid-cols-2">
+                    <>
+                      <div className="grid gap-5 md:grid-cols-2">
+                        <CompanyField
+                          control={form.control}
+                          name="initial_admin_email"
+                          label="Email"
+                          type="email"
+                        />
+                        <CompanyField
+                          control={form.control}
+                          name="initial_admin_password"
+                          label="Password"
+                          type="password"
+                        />
+                      </div>
                       <CompanyField
                         control={form.control}
-                        name="initial_admin_email"
-                        label="Email"
-                        type="email"
+                        name="initial_admin_name"
+                        label="Nome na empresa"
                       />
                       <CompanyField
                         control={form.control}
-                        name="initial_admin_password"
-                        label="Password"
-                        type="password"
+                        name="initial_admin_phone"
+                        label="Telemovel"
                       />
-                    </div>
+                    </>
                   )}
-
-                  <CompanyField
-                    control={form.control}
-                    name="initial_admin_phone"
-                    label="Telefone"
-                  />
                 </div>
               ) : null}
 

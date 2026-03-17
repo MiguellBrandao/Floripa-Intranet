@@ -283,7 +283,9 @@ export class PlatformService {
     const membershipSource = this.resolveMembershipSource(dto);
 
     const membershipId = await db.transaction(async (tx) => {
-      const userId = await this.resolveMembershipUserId(tx, membershipSource);
+      const userId = await this.resolveMembershipUserId(tx, membershipSource, {
+        allowSuperAdmin: false,
+      });
       await this.assertCompanyUserMembershipAvailable(tx, companyId, userId);
 
       const insertedMemberships = await tx
