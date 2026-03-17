@@ -47,89 +47,75 @@
     {
       "idx": 6,
       "version": "7",
-      "when": 1773619200000,
-      "tag": "0006_seed_floripa_jardins",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1773621000000,
-      "tag": "0007_promote_floripa_jardins",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
       "when": 1773622500000,
       "tag": "0008_company_logo_path",
       "breakpoints": true
     },
     {
-      "idx": 9,
+      "idx": 7,
       "version": "7",
       "when": 1773630000000,
       "tag": "0009_company_memberships_role",
       "breakpoints": true
     },
     {
-      "idx": 10,
+      "idx": 8,
       "version": "7",
       "when": 1773642000000,
       "tag": "0010_company_favicon_path",
       "breakpoints": true
     },
     {
-      "idx": 11,
+      "idx": 9,
       "version": "7",
       "when": 1773651000000,
       "tag": "0011_quotes_garden_services_valid_until",
       "breakpoints": true
     },
     {
-      "idx": 12,
+      "idx": 10,
       "version": "7",
       "when": 1773657000000,
       "tag": "0012_product_usage_task_id",
       "breakpoints": true
     },
     {
-      "idx": 13,
+      "idx": 11,
       "version": "7",
       "when": 1773663000000,
       "tag": "0013_stock_rules_and_unit_price",
       "breakpoints": true
     },
     {
-      "idx": 14,
+      "idx": 12,
       "version": "7",
       "when": 1773672000000,
       "tag": "0014_expenses",
       "breakpoints": true
     },
     {
-      "idx": 15,
+      "idx": 13,
       "version": "7",
       "when": 1773679800000,
       "tag": "0015_irrigation_zones",
       "breakpoints": true
     },
     {
-      "idx": 16,
+      "idx": 14,
       "version": "7",
       "when": 1773688200000,
       "tag": "0016_expenses_amount",
       "breakpoints": true
     },
     {
-      "idx": 17,
+      "idx": 15,
       "version": "7",
       "when": 1773693600000,
       "tag": "0017_reports",
       "breakpoints": true
     },
     {
-      "idx": 18,
+      "idx": 16,
       "version": "7",
       "when": 1773702000000,
       "tag": "0018_super_admin_platform",

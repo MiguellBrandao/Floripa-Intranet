@@ -12,26 +12,6 @@ CREATE TABLE "companies" (
 --> statement-breakpoint
 CREATE UNIQUE INDEX "companies_slug_unique" ON "companies" ("slug");
 --> statement-breakpoint
-INSERT INTO "companies" (
-	"name",
-	"slug",
-	"address",
-	"nif",
-	"mobile_phone",
-	"email",
-	"iban"
-)
-VALUES (
-	'Default Company',
-	'default-company',
-	'Rua Principal, 1',
-	'500000000',
-	'910000000',
-	'default@floripa.local',
-	'PT50000201231234567890154'
-)
-ON CONFLICT ("slug") DO NOTHING;
---> statement-breakpoint
 ALTER TABLE "employees" ADD COLUMN "company_id" uuid;
 --> statement-breakpoint
 ALTER TABLE "employee_teams" ADD COLUMN "company_id" uuid;
@@ -53,68 +33,19 @@ ALTER TABLE "payments" ADD COLUMN "company_id" uuid;
 ALTER TABLE "quotes" ADD COLUMN "company_id" uuid;
 --> statement-breakpoint
 DO $$
-DECLARE
-	default_company_id uuid;
 BEGIN
-	SELECT "id"
-	INTO default_company_id
-	FROM "companies"
-	WHERE "slug" = 'default-company'
-	LIMIT 1;
-
-	IF default_company_id IS NULL THEN
-		RAISE EXCEPTION 'Default company not found';
+	IF EXISTS (SELECT 1 FROM "employees")
+		OR EXISTS (SELECT 1 FROM "employee_teams")
+		OR EXISTS (SELECT 1 FROM "teams")
+		OR EXISTS (SELECT 1 FROM "gardens")
+		OR EXISTS (SELECT 1 FROM "tasks")
+		OR EXISTS (SELECT 1 FROM "work_logs")
+		OR EXISTS (SELECT 1 FROM "products")
+		OR EXISTS (SELECT 1 FROM "product_usage")
+		OR EXISTS (SELECT 1 FROM "payments")
+		OR EXISTS (SELECT 1 FROM "quotes") THEN
+		RAISE EXCEPTION '0005_companies_multitenancy requires manual migration of existing pre-multitenancy data before applying this version.';
 	END IF;
-
-	UPDATE "employees"
-	SET "company_id" = default_company_id
-	WHERE "company_id" IS NULL;
-
-	UPDATE "teams"
-	SET "company_id" = default_company_id
-	WHERE "company_id" IS NULL;
-
-	UPDATE "gardens"
-	SET "company_id" = default_company_id
-	WHERE "company_id" IS NULL;
-
-	UPDATE "products"
-	SET "company_id" = default_company_id
-	WHERE "company_id" IS NULL;
-
-	UPDATE "quotes"
-	SET "company_id" = default_company_id
-	WHERE "company_id" IS NULL;
-
-	UPDATE "employee_teams" AS "et"
-	SET "company_id" = "e"."company_id"
-	FROM "employees" AS "e"
-	WHERE "et"."employee_id" = "e"."id"
-	  AND "et"."company_id" IS NULL;
-
-	UPDATE "tasks" AS "t"
-	SET "company_id" = "g"."company_id"
-	FROM "gardens" AS "g"
-	WHERE "t"."garden_id" = "g"."id"
-	  AND "t"."company_id" IS NULL;
-
-	UPDATE "work_logs" AS "wl"
-	SET "company_id" = "t"."company_id"
-	FROM "tasks" AS "t"
-	WHERE "wl"."task_id" = "t"."id"
-	  AND "wl"."company_id" IS NULL;
-
-	UPDATE "payments" AS "p"
-	SET "company_id" = "g"."company_id"
-	FROM "gardens" AS "g"
-	WHERE "p"."garden_id" = "g"."id"
-	  AND "p"."company_id" IS NULL;
-
-	UPDATE "product_usage" AS "pu"
-	SET "company_id" = "g"."company_id"
-	FROM "gardens" AS "g"
-	WHERE "pu"."garden_id" = "g"."id"
-	  AND "pu"."company_id" IS NULL;
 END $$;
 --> statement-breakpoint
 ALTER TABLE "employees" ALTER COLUMN "company_id" SET NOT NULL;
